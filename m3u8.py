@@ -1,8 +1,7 @@
 # coding: utf8
 
-import sys, urllib2
-from urlparse import urlparse, urljoin
-import argparse
+import urllib2
+from urlparse import urljoin
 
 
 
@@ -27,7 +26,7 @@ class MpegTS:
     
     def _loadTsUrls(self):
         self._verbo("loading m3Url: {}".format(self.m3Url));
-        contents = _getContents(self.m3Url);
+        contents = self._getContents(self.m3Url);
         self.tsNames = [s for s in contents.split() if s[0]!="#" and s!=""]
         self.tsUrls = [urljoin(self.m3Url, u) for u in self.tsNames ]
         self._verbo("TS Playlist links: {}".format("\n".join(self.tsUrls)));
@@ -42,14 +41,14 @@ class MpegTS:
             with open("stash/{}".format(file_name),"wb") as f:
                 f.write(contents)
     
-    def _retrieve(self)
+    def _retrieve(self):
         self._verbo('start retrieving...')
         count = 0
         for tslink, tsname in zip(self.tsUrls, self.tsNames):
             self._verbo('retrieving {}(part {})...'.format(tsname,count))
             ts = self._getContents(tslink);
             self._keep(tsname,ts);
-            with open(self.m3Url.split("/")[-1].split(".")[0], 'ab') as f
+            with open(self.m3Url.split("/")[-1].split(".")[0], 'ab') as f:
                 f.write(ts)
             count += 1
             self._verbo('{}(part {}) retrieved'.format(tsname,count))
