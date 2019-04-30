@@ -1,6 +1,6 @@
 # coding: utf8
 
-import urllib2
+import os, urllib2
 from urlparse import urljoin
 
 
@@ -38,6 +38,8 @@ class MpegTS:
     
     def _keep(self, file_name, contents):
         if self.keep:
+            if not os.path.exists("stash"):
+                os.makedirs("stash")
             with open("stash/{}".format(file_name),"wb") as f:
                 f.write(contents)
     
@@ -48,7 +50,7 @@ class MpegTS:
             self._verbo('retrieving {}(part {})...'.format(tsname,count))
             ts = self._getContents(tslink);
             self._keep(tsname,ts);
-            with open(self.m3Url.split("/")[-1].split(".")[0], 'ab') as f:
+            with open(self.m3Url.split("/")[-1].split(".")[0]+".ts", 'ab') as f:
                 f.write(ts)
             count += 1
             self._verbo('{}(part {}) retrieved'.format(tsname,count))
